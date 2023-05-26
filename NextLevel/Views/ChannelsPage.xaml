@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NextLevel.Views.ChannelsPage"
+             xmlns:ViewModel="clr-namespace:NextLevel.ViewModel"
+             x:DataType="ViewModel:ChannelsViewModel"
+             xmlns:model="clr-namespace:NextLevel.Models"
+             xmlns:Converter="clr-namespace:NextLevel.Helpers"
+             xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Compat.Maui"
+             xmlns:transform="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Compat.Transformations">
+    <ContentPage.Resources>
+        <Converter:ImageHandlerHalper x:Key="ConverterImage"/>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              Padding="10" 
+              Background="#eee">
+            <ScrollView>
+                <CollectionView ItemsSource="{Binding entries}"
+                                VerticalOptions="FillAndExpand"
+                                RemainingItemsThreshold="1"
+                                RemainingItemsThresholdReachedCommand="{Binding LoadMoreDataCommand}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"
+                                           ItemSpacing="3"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ChannelModel">
+                            <Border Background="white"
+                                    Stroke="white"
+                                Padding="4">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="4" />
+                                </Border.StrokeShape>
+                                <StackLayout Background="white"
+                                         Orientation="Horizontal"
+                                         Margin="0,4,0,4">
+                                    <ff:CachedImage 
+                                            Source="{Binding ImageUrl,Converter={StaticResource ConverterImage},Mode=OneTime}"
+                                            HeightRequest="30"
+                                            WidthRequest="30"
+                                            Aspect="AspectFill"
+                                            CacheDuration="0"
+                                            DownsampleToViewSize="True"
+                                            ErrorPlaceholder="dotnet_bot.png"
+                                        >
+                                    </ff:CachedImage>
+                                    <StackLayout>
+                                        <Label Text="{Binding Name}"/>
+                                        <Label Text="{Binding GroupTitle}"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Grid>
+        <Grid Grid.Row="1" 
+              BackgroundColor="#ddd">
+            <StackLayout HorizontalOptions="Center"
+                         VerticalOptions="Center">
+                <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                   IsRunning="{Binding IsBusy}"
+                                    HeightRequest="30"
+                                    WidthRequest="30"/>
+            </StackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>
